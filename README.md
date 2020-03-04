@@ -2,18 +2,12 @@
 
 ## Profile bar
 
-### 로그인 전
-
-#### Response
-
-1. 인기있는 책 list
-1. 최근 사람들이 읽은 책 list
-
 ### 로그인 후
 
 #### Response
 
 1. 프로필 썸네일 사진
+1. 이름
 1. my list
 
 #### Request
@@ -25,6 +19,11 @@
 ## Main Page
 
 #### Profile bar
+
+#### Response
+
+1. 인기있는 책
+1. 최근 사람들이 읽은 책
 
 #### Request
 
