@@ -1,10 +1,8 @@
-# login/serializers.py
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from .models import Profile
 
-# sign up
+from .models import Account
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
@@ -15,21 +13,15 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create_user(
-            validated_data["username"],
-            None,
-            validated_data["password"]
+            validated_data["username"], None, validated_data["password"]
         )
         return user
-
-# check login
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("id", "username")
-
-# login
 
 
 class LoginUserSerializer(serializers.Serializer):
@@ -43,10 +35,8 @@ class LoginUserSerializer(serializers.Serializer):
         raise serializers.ValidationError(
             "Unable to log in with provided credentials.")
 
-# Profiel serializer
 
-
-class ProfileSerializer(serializers.ModelSerializer):
+class AccountSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Profile
+        model = Account
         fields = ("user_pk", "email")
