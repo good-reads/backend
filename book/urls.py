@@ -5,4 +5,5 @@ from .views import *
 
 urlpatterns = [
     path("register/", RegisterBookAPI.as_view()),
+    path("update/", RegisterBookAPI.as_view()),
 ]

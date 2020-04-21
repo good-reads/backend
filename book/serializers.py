@@ -3,18 +3,18 @@ from rest_framework import serializers
 from .models import Book
 
 
-class RegisterBookSerializer(serializers.ModelSerializer):
+class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ("title", "author")
+        fields = ("id", "title", "author",)
 
     def create(self, validated_data):
         book = Book.objects.create(
             title=validated_data['title'], author=validated_data['author'])
         return book
 
-
-class BookSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Book
-        fields = ("title", "author")
+    def update(self, instance, validated_data):
+        instance.title = validated_data.get('title', instance.title)
+        instance.author = validated_data.get('author', instance.author)
+        instance.save()
+        return instance
