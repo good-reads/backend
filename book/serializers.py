@@ -9,8 +9,7 @@ class BookSerializer(serializers.ModelSerializer):
         fields = ("id", "title", "author",)
 
     def create(self, validated_data):
-        book = Book.objects.create(
-            title=validated_data['title'], author=validated_data['author'])
+        book = Book.objects.create(**validated_data)
         return book
 
     def update(self, instance, validated_data):
