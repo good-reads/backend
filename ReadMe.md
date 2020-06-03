@@ -210,3 +210,16 @@
         * book review
     - res
     
+
+# My Page
+
+### button
+1. change user info api
+    - POST req
+        * user_email
+        * user_name
+        * password
+        * thumbnail img
+    - res
+        * user_id
+    
