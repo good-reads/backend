@@ -43,9 +43,9 @@
         * logout id or e-mail
 
 
-### Rate or Review
+# Rate or Review
 
-##### info
+### info
 1. profile get api
     - POST req
         * user_id or user_email
@@ -67,7 +67,7 @@
         * book rate
         * book review
 
-##### button
+### button
 1. review submit api
     - POST req
         * book_id
@@ -79,9 +79,9 @@
         * rate
 
 
-### Search Page
+# Search Page
 
-##### info
+### info
 1. profile get api
     - POST req
         * user_id or user_email
@@ -101,7 +101,7 @@
         * book authors
         * book rates
 
-##### search
+### search
 1. GET method search api
     - GET req
         * genre
@@ -113,7 +113,7 @@
         * thumbnail imgs
         * book rates
         
-##### book list
+### book list
 1. selected book info get api
     - GET req
         * book_id
@@ -124,9 +124,9 @@
         * book rate
         * book review
         
-### Detail Page
+# Detail Page
 
-##### info
+### info
 1. profile get api
     - POST req
         * user_id or user_email
@@ -148,7 +148,7 @@
         * book rate
         * book review
 
-##### my list edit down menu
+### my list edit down menu
 1. add book in list api
     * POST req
         - user_id
@@ -163,9 +163,9 @@
     * res
 
 
-### SignUp Page
+# SignUp Page
 
-##### button
+### button
 1. register info submit api
     * POST req
         - user_email
@@ -174,9 +174,9 @@
         - token
         
 
-### Login Page
+# Login Page
 
-##### button
+### button
 1. login info submit api
     * POST req
         - user_email
@@ -185,9 +185,9 @@
         * token
 
 
-### Add New Book
+# Add New Book
 
-##### info
+### info
 1. profile get api
     - POST req
         * user_id or user_email
@@ -200,7 +200,7 @@
     - res
         * book names
 
-##### button
+### button
 1. book info submit api
     - POST req
         * book title
