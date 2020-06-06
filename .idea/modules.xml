@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/.idea/goodreads_back.iml" filepath="$PROJECT_DIR$/.idea/goodreads_back.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/.idea/backend.iml" filepath="$PROJECT_DIR$/.idea/backend.iml" />
+>>>>>>> 8aaad945f3d3a0c29f876d1c24b304455a58f397
     </modules>
   </component>
 </project>
