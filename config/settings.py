@@ -26,7 +26,9 @@ SECRET_KEY = '2oqn(ypmww_n1#k6+(y76x+3cq!u=zitp-y%#vc%g%ee*-@&%h'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    ".ap-northeast-2.compute.amazonaws.com"
+    ".ap-northeast-2.compute.amazonaws.com",
+    "localhost",
+    "127.0.0.1",
 ]
 
 
@@ -45,9 +47,18 @@ INSTALLED_APPS = [
     'book',
 ]
 
+# Customizing Auth User model
+AUTH_USER_MODEL = 'user.Account'
+
+AUTHENTICATION_BACKENDS = [
+    'user.backends.Backend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES':
-    ('knox.auth.TokenAuthentication',),
+    'DEFAULT_AUTHENTICATION_CLASSES':(
+        'knox.auth.TokenAuthentication',
+    ),
 }
 
 MIDDLEWARE = [

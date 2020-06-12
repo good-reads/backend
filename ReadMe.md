@@ -38,9 +38,10 @@
 ### button
 1. logout api
     - POST req
-        * user_id or user_email
+        * URL: http://<server-domain>/api/accounts/auth/logout/
+        * Authorization: Token <token>
     - res
-        * logout id or e-mail
+        * no content
 
 
 # Rate or Review
@@ -167,11 +168,22 @@
 
 ### button
 1. register info submit api
-    * POST req
-        - user_email
-        - password
+    * POST req 
+        - URL: http://<server-domain>/api/accounts/auth/register/
+            * name
+            * email
+            * password
     * res
-        - token
+        - name
+        - email
+        - hashed password
+1. password change api
+    * POST req
+        - URL: http://<server-domain>/api/accounts/auth/account/update/
+        - Authorization: Token <token>
+            * password
+    * res
+        - code 200
         
 
 # Login Page
@@ -179,15 +191,28 @@
 ### button
 1. login info submit api
     * POST req
-        - user_email
-        - password
+        - URL: http://<server-domain>/api/accounts/auth/login/
+            - email
+            - password
     * res
+        * user_id
         * token
 
 
 # Add New Book
 
 ### info
+1. profile edit api
+    - PUT req
+        * URL: http://<server-domain>/api/accounts/auth/account/update/
+        * Authorization: Token <token>
+            - name
+            - email
+    - res
+        * name
+        * email
+            
+        
 1. profile get api
     - POST req
         * user_id or user_email

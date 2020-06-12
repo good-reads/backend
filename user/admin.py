@@ -4,7 +4,7 @@ from .models import Account
 
 
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ['user', 'user_pk', 'email']
+    list_display = ('id', 'name', 'email', 'password', 'date_joined',)
     filter_horizontal = ('mylist',)
 
 

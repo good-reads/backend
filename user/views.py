@@ -1,59 +1,74 @@
-from django.shortcuts import render, get_object_or_404
-from rest_framework import viewsets, permissions, generics, status
+from django.shortcuts import get_object_or_404, get_list_or_404
+from rest_framework import permissions, generics, status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from knox.models import AuthToken
 
-from .serializers import CreateUserSerializer, UserSerializer, LoginUserSerializer, AccountSerializer
+from .serializers import (
+    UserSerializer, LoginSerializer, AccountSerializer, EditSerializer,
+)
 from .models import Account
 
 
-class RegistrationAPI(generics.GenericAPIView):
-    serializer_class = CreateUserSerializer
+def check_login(user):
+    user = AuthToken.objects.get(user=user)
+    if user:
+        return user
+    else:
+        return None
 
-    def post(self, request, *args, **kwargs):
-        if len(request.data["username"]) < 6 or len(request.data["password"]) < 4:
-            body = {"message": "short field"}
-            return Response(body, status=status.HTTP_400_BAD_REQUEST)
-        serializer = self.get_serializer(data=request.data)
+
+@api_view(['POST'])
+def register_account(request):
+    if request.method == 'POST':
+        serializer = AccountSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        return Response(
-            {
-                "user": UserSerializer(
-                    user, context=self.get_serializer_context()
-                ).data,
-            }
-        )
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class LoginAPI(generics.GenericAPIView):
-    serializer_class = LoginUserSerializer
+@api_view(['POST', 'PUT'])
+@permission_classes([IsAuthenticated])
+def update_account(request):
+    if request.method == 'POST':
+        account = get_object_or_404(Account, id=request.user.id)
+        request.data['name'] = request.data.get('name', account.name)
+        data = {
+            'email': account.email,
+            'name': account.name,
+            'password': request.data['password']
+        }
+        serializer = AccountSerializer(account, data=data)
+        serializer.is_valid(raise_exception=True)
+        if serializer.save():
+            return Response(status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'PUT':
+        account = get_object_or_404(Account, id=request.user.id)
+        request.data['name'] = request.data.get('name', account.name)
+        serializer = EditSerializer(account, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+
+@api_view(['POST'])
+def login_account(request):
+    if request.method == 'POST':
+        print(AuthToken.objects.filter().count())
+        serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
-        token = AuthToken.objects.create(user)
-        print(token[0])
-        return Response(
-            {
-                "user": UserSerializer(
-                    user, context=self.get_serializer_context()
-                ).data,
-                "token": token[1],
-            }
-        )
-
-    def delete(self, request, *args, **kwargs):
-        permission_classes = [permissions.IsAuthenticated]
-        token = get_object_or_404(AuthToken, user=request.data['user_id'])
-        token.delete()
-        return Response(
-            {
-                "logout": "success"
-            }
-        )
+        token = check_login(user)
+        if not token:
+            token = AuthToken.objects.create(user)
+        data = {
+            'user_id': user.id,
+            'token': token[1],
+        }
+        return Response(data, status=status.HTTP_200_OK)
 
 
 class UserAPI(generics.RetrieveAPIView):
@@ -74,10 +89,3 @@ class UserAPI(generics.RetrieveAPIView):
             }
         )
 
-
-class AccountUpdateAPI(generics.UpdateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    lookup_field = "user_pk"
-    queryset = Account.objects.all()
-    serializer_class = AccountSerializer
