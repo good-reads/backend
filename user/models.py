@@ -3,7 +3,7 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser, PermissionsMixin
 )
 
-from book.models import Book
+from book.models.books import Book
 
 
 class UserManager(BaseUserManager):
@@ -33,10 +33,11 @@ class UserManager(BaseUserManager):
 
 
 class Account(AbstractBaseUser, PermissionsMixin):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=20, null=False, unique=True)
     mylist = models.ManyToManyField(Book)
+
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
@@ -49,4 +50,5 @@ class Account(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['email']
 
     class Meta:
+        db_table = 'accounts'
         ordering = ('id',)

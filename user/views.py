@@ -1,69 +1,38 @@
-from django.shortcuts import get_object_or_404, get_list_or_404
-from rest_framework import permissions, generics, status
+from django.shortcuts import get_object_or_404
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from knox.models import AuthToken
 
-from .serializers import (
-    UserSerializer, LoginSerializer, AccountSerializer, EditSerializer,
-)
 from .models import Account
-
-
-def check_login(user):
-    user = AuthToken.objects.get(user=user)
-    if user:
-        return user
-    else:
-        return None
+from .serializers import (
+    RegisterAccountSerializer,
+    LoginUserSerializer,
+    GetProfileSerializer,
+    EditProfileSerializer,
+    EditPasswordSerializer,
+    AddMylistSerializer,
+    SubMylistSerializer,
+)
 
 
 @api_view(['POST'])
 def register_account(request):
     if request.method == 'POST':
-        serializer = AccountSerializer(data=request.data)
+        serializer = RegisterAccountSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-@api_view(['POST', 'PUT'])
-@permission_classes([IsAuthenticated])
-def update_account(request):
-    if request.method == 'POST':
-        account = get_object_or_404(Account, id=request.user.id)
-        request.data['name'] = request.data.get('name', account.name)
-        data = {
-            'email': account.email,
-            'name': account.name,
-            'password': request.data['password']
-        }
-        serializer = AccountSerializer(account, data=data)
-        serializer.is_valid(raise_exception=True)
-        if serializer.save():
-            return Response(status=status.HTTP_202_ACCEPTED)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'PUT':
-        account = get_object_or_404(Account, id=request.user.id)
-        request.data['name'] = request.data.get('name', account.name)
-        serializer = EditSerializer(account, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+        return Response(status=status.HTTP_201_CREATED)
 
 
 @api_view(['POST'])
 def login_account(request):
     if request.method == 'POST':
-        print(AuthToken.objects.filter().count())
-        serializer = LoginSerializer(data=request.data)
+        serializer = LoginUserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
-        token = check_login(user)
-        if not token:
-            token = AuthToken.objects.create(user)
+        token = AuthToken.objects.create(user)
         data = {
             'user_id': user.id,
             'token': token[1],
@@ -71,21 +40,39 @@ def login_account(request):
         return Response(data, status=status.HTTP_200_OK)
 
 
-class UserAPI(generics.RetrieveAPIView):
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = UserSerializer
+@api_view(['GET', 'POST', 'PATCH'])
+@permission_classes([IsAuthenticated])
+def get_or_update_account(request):
+    account = get_object_or_404(Account, id=request.user.id)
+    if request.method == 'GET':
+        serializer = GetProfileSerializer(account)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def get_object(self):
-        return self.request.user
-
-    def add_myList(self, request, *args, **kwargs):
-        instance = get_object_or_404(Account, user=kwargs['user_id'])
-        serializer = self.get_serializer(instance, data=request.data)
+    elif request.method == 'POST':
+        serializer = EditPasswordSerializer(account, data=request.data)
         serializer.is_valid(raise_exception=True)
-        account = serializer.save()
-        return Response(
-            {
-                "add_myList": request.data['books']
-            }
-        )
+        if serializer.save():
+            return Response(status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
+    elif request.method == 'PATCH':
+        fields = request.data.keys()
+        serializer = EditProfileSerializer(account, fields=fields, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def edit_my_list(request):
+    if request.method == 'PATCH':
+        account = get_object_or_404(Account, id=request.user.id)
+        if request.data['type'] == 'ADD':
+            serializer = AddMylistSerializer(account, data=request.data)
+        else:
+            serializer = SubMylistSerializer(account, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)

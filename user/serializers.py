@@ -1,21 +1,21 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from django.contrib.auth.password_validation import validate_password
 from django.core.validators import validate_email
 
 from .models import Account
+from .fields import BookListingField
+from config.serializers import DynamicFieldsModelSerializer
 
 
-class AccountSerializer(serializers.ModelSerializer):
+class RegisterAccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ('name', 'email', 'password')
+        fields = ('name', 'email', 'password',)
 
     def validate(self, data):
-        try:
-            validate_email(data['email'])
-        except validate_email.ValidationError as EmailValidationError:
-            raise EmailValidationError
+        validate_email(data['email'])
+        validate_password(data['password'])
         return data
 
     def create(self, validated_data):
@@ -24,35 +24,8 @@ class AccountSerializer(serializers.ModelSerializer):
         account.save()
         return account
 
-    def update(self, instance, validated_data):
-        if instance.password == validated_data['password']:
-            return False
-        else:
-            instance.set_password(validated_data['password'])
-            instance.save()
-            return True
 
-
-class EditSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Account
-        fields = ('name', 'email')
-
-    def update(self, instance, validated_data):
-        instance.email = validated_data.get('email', instance.email)
-        instance.name = validated_data.get('name', instance.name)
-        instance.save()
-        return instance
-
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'username')
-
-
-class LoginSerializer(serializers.Serializer):
+class LoginUserSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
 
@@ -63,3 +36,70 @@ class LoginSerializer(serializers.Serializer):
         raise serializers.ValidationError(
             "Unable to log in with provided credentials.")
 
+class EditPasswordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = ('password',)
+
+    def validate(self, data):
+        validate_password(data['password'])
+        return data
+
+    def update(self, account, validated_data):
+        account.set_password(validated_data['password'])
+        account.save()
+        return True
+
+
+class GetProfileSerializer(serializers.ModelSerializer):
+    mylist = BookListingField(many=True, read_only=True)
+
+    class Meta:
+        model = Account
+        fields = ('name', 'email', 'mylist',)
+
+
+class EditProfileSerializer(DynamicFieldsModelSerializer):
+    class Meta:
+        model = Account
+        fields = ('name', 'email',)
+
+    def update(self, instance, validated_data):
+        instance.email = validated_data.get('email', instance.email)
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+        return instance
+
+
+class AddMylistSerializer(serializers.ModelSerializer):
+    mylist = BookListingField(many=True, read_only=True)
+
+    class Meta:
+        model = Account
+        fields = ('mylist',)
+
+    def update(self, account, validated_data):
+        for book in validated_data['mylist']:
+            account.mylist.add(book)
+        return account
+
+
+class SubMylistSerializer(serializers.ModelSerializer):
+    mylist = BookListingField(many=True, read_only=True)
+
+    class Meta:
+        model = Account
+        fields = ('mylist',)
+
+    def update(self, account, validated_data):
+        for book in validated_data['mylist']:
+            account.mylist.remove(book)
+        return account
+
+
+class GetMylistSerializer(serializers.ModelSerializer):
+    mylist = BookListingField(many=True, read_only=True)
+
+    class Meta:
+        model = Account
+        fields = ('mylist',)

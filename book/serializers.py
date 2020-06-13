@@ -1,19 +1,35 @@
 from rest_framework import serializers
 
-from .models import Book
+from config.serializers import DynamicFieldsModelSerializer
+from book.models.books import Book
 
 
-class BookSerializer(serializers.ModelSerializer):
+class RegisterBookSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Book
-        fields = ("id", "title", "author",)
+        fields = ('title', 'author', 'intro', 'rate', 'thumbnail', 'img',)
 
     def create(self, validated_data):
-        book = Book.objects.create(**validated_data)
+        return Book.create(validated_data)
+
+    def update(self, book, validated_data):
+        book.title = validated_data.get('title', book.title)
+        book.author = validated_data.get('author', book.author)
+        book.intro = validated_data.get('intro', book.intro)
+        book.rate = validated_data.get('rate', book.rate)
+        book.thumbnail = validated_data.get('thumbnail', book.thumbnail)
+        book.img = validated_data.get('img', book.img)
+        book.save()
         return book
 
-    def update(self, instance, validated_data):
-        instance.title = validated_data.get('title', instance.title)
-        instance.author = validated_data.get('author', instance.author)
-        instance.save()
-        return instance
+
+class BookDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = ('title', 'author', 'intro', 'rate', 'thumbnail', 'img',)
+
+
+class BookListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = ('id', 'title', 'author', 'rate', 'thumbnail',)

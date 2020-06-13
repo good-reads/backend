@@ -2,11 +2,19 @@
 
 ### info
 1. profile get api
-    - POST req
-        * user_id or user_email
+    - GET req
+        * URL: http://<<server-domain>>/api/accounts/auth/account/get/
+        * Authorization: Token <<token>>
     - res
-        * thumbnail img url
-        * user name
+        * code 200: OK
+            * name
+            * email
+            * mylist
+                - book_id
+                - title
+                - author
+                - rate
+                - thumbnail url
 1. my list get api
     - POST req
         * user_id or user_email
@@ -38,21 +46,29 @@
 ### button
 1. logout api
     - POST req
-        * URL: http://<server-domain>/api/accounts/auth/logout/
-        * Authorization: Token <token>
+        * URL: http://<<server-domain>>/api/accounts/auth/logout/
+        * Authorization: Token <<token>>
     - res
-        * no content
+        * code 204: no content
 
 
 # Rate or Review
 
 ### info
 1. profile get api
-    - POST req
-        * user_id or user_email
+    - GET req
+        * URL: http://<<server-domain>>/api/accounts/auth/account/get/
+        * Authorization: Token <<token>>
     - res
-        * thumbnail img url
-        * user name
+        * code 200: OK
+            * name
+            * email
+            * mylist
+                - book_id
+                - title
+                - author
+                - rate
+                - thumbnail url
 1. my list get api
     - POST req
         * user_id or user_email
@@ -60,13 +76,15 @@
         * book names
 1. book info get api
     - GET req
-        * book_id
+        * URL: http://<<server-domain>>/api/books/get/details/?book_id=<<number>>
     - res
-        * book cover img
-        * book title
-        * book author
-        * book rate
-        * book review
+        * code 200: OK
+            * title
+            * author
+            * intro
+            * rate
+            * thumbnail
+            * img
 
 ### button
 1. review submit api
@@ -84,11 +102,19 @@
 
 ### info
 1. profile get api
-    - POST req
-        * user_id or user_email
+    - GET req
+        * URL: http://<<server-domain>>/api/accounts/auth/account/get/
+        * Authorization: Token <<token>>
     - res
-        * thumbnail img url
-        * user name
+        * code 200: OK
+            * name
+            * email
+            * mylist
+                - book_id
+                - title
+                - author
+                - rate
+                - thumbnail url
 1. my list get api
     - POST req
         * user_id or user_email
@@ -117,23 +143,33 @@
 ### book list
 1. selected book info get api
     - GET req
-        * book_id
+        * URL: http://<<server-domain>>/api/books/get/details/?book_id=<<number>>
     - res
-        * book cover img
-        * book title
-        * book author
-        * book rate
-        * book review
+        * code 200: OK
+            * title
+            * author
+            * intro
+            * rate
+            * thumbnail
+            * img
         
 # Detail Page
 
 ### info
 1. profile get api
-    - POST req
-        * user_id or user_email
+    - GET req
+        * URL: http://<<server-domain>>/api/accounts/auth/account/get/
+        * Authorization: Token <<token>>
     - res
-        * thumbnail img url
-        * user name
+        * code 200: OK
+            * name
+            * email
+            * mylist
+                - book_id
+                - title
+                - author
+                - rate
+                - thumbnail url
 1. my list get api
     - POST req
         * user_id or user_email
@@ -141,20 +177,24 @@
         * book names
 1. book info get api
     - GET req
-        * book_id
+        * URL: http://<<server-domain>>/api/books/get/details/?book_id=<<number>>
     - res
-        * book cover img
-        * book title
-        * book author
-        * book rate
-        * book review
+        * code 200: OK
+            * title
+            * author
+            * intro
+            * rate
+            * thumbnail
+            * img
 
 ### my list edit down menu
 1. add book in list api
-    * POST req
-        - user_id
-        - book_id
-        - list_id
+    * PATCH req
+        - URL: http://<<server-domain>>/api/accounts/auth/mylist/edit/
+        - Authorization: Token <<token>>
+            - user_id
+            - book_id
+            - list_id
     * res
 1. create new list api
     * POST req
@@ -169,18 +209,16 @@
 ### button
 1. register info submit api
     * POST req 
-        - URL: http://<server-domain>/api/accounts/auth/register/
+        - URL: http://<<server-domain>>/api/accounts/auth/register/
             * name
             * email
             * password
     * res
-        - name
-        - email
-        - hashed password
+        - code 201: created
 1. password change api
     * POST req
-        - URL: http://<server-domain>/api/accounts/auth/account/update/
-        - Authorization: Token <token>
+        - URL: http://<<server-domain>>/api/accounts/auth/account/update/
+        - Authorization: Token <<token>>
             * password
     * res
         - code 200
@@ -191,60 +229,64 @@
 ### button
 1. login info submit api
     * POST req
-        - URL: http://<server-domain>/api/accounts/auth/login/
+        - URL: http://<<server-domain>>/api/accounts/auth/login/
             - email
             - password
     * res
-        * user_id
-        * token
+        * code 200: OK
+            * user_id
+            * token
 
 
 # Add New Book
 
-### info
-1. profile edit api
-    - PUT req
-        * URL: http://<server-domain>/api/accounts/auth/account/update/
-        * Authorization: Token <token>
-            - name
-            - email
-    - res
-        * name
-        * email
-            
-        
+### info         
 1. profile get api
-    - POST req
-        * user_id or user_email
+    - GET req
+        * URL: http://<<server-domain>>/api/accounts/auth/account/get/
+        * Authorization: Token <<token>>
     - res
-        * thumbnail img url
-        * user name
-1. my list get api
-    - POST req
-        * user_id or user_email
-    - res
-        * book names
+        * code 200: OK
+            * name
+            * email
+            * mylist
+                - book_id
+                - title
+                - author
+                - rate
+                - thumbnail url
 
 ### button
 1. book info submit api
-    - POST req
-        * book title
-        * book author
-        * book thumbnail img
-        * book rate
-        * book review
+    - PUT req
+        * URL: http://<<server-domain>>/api/books/register/
+        * Authorization: Token <<token>>
+            * book title
+            * book author
+            * book thumbnail img
+            * book rate
+            * book intro
     - res
-    
+        * code 201: created
 
 # My Page
 
 ### button
 1. change user info api
-    - POST req
-        * user_email
-        * user_name
-        * password
-        * thumbnail img
+    - PATCH req
+        * URL: http://<<server-domain>>/api/accounts/auth/account/update/
+        * Authorization: Token <<token>>
+            * user_email
+            * user_name
+            * thumbnail img
+            * .. (except password)
     - res
-        * user_id
-    
+        * code 202: Accepted
+            * what you changed
+1. password change api
+    * POST req
+        - URL: http://<<server-domain>>/api/accounts/auth/account/update/
+        - Authorization: Token <<token>>
+            * password
+    * res
+        - code 200: OK

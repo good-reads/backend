@@ -141,3 +141,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+IMG_BASE_URL = '/static/admin/img/icon-unknown.svg'
+BOOK_LIST_LIMITAION = 10
