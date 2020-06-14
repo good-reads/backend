@@ -1,7 +1,7 @@
 from django.db import models
 
-from .books import Book
-from user.models import Account
+from book.models import Book
+from .accounts import Account
 
 
 class Review(models.Model):
@@ -12,3 +12,7 @@ class Review(models.Model):
 
     class Meta:
         db_table = 'reviews'
+
+    @classmethod
+    def create(cls, data):
+        return cls.objects.create(**data)

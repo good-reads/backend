@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from config.serializers import DynamicFieldsModelSerializer
-from book.models.books import Book
+from book.models import Book
 
 
 class RegisterBookSerializer(DynamicFieldsModelSerializer):
@@ -26,7 +26,7 @@ class RegisterBookSerializer(DynamicFieldsModelSerializer):
 class BookDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ('title', 'author', 'intro', 'rate', 'thumbnail', 'img',)
+        fields = '__all__'
 
 
 class BookListSerializer(serializers.ModelSerializer):

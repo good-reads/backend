@@ -3,8 +3,8 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import validate_email
 
-from .models import Account
-from .fields import BookListingField
+from user.models import Account, CustomList
+from book.serializers import BookListSerializer
 from config.serializers import DynamicFieldsModelSerializer
 
 
@@ -36,6 +36,18 @@ class LoginUserSerializer(serializers.Serializer):
         raise serializers.ValidationError(
             "Unable to log in with provided credentials.")
 
+
+class UserBookListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomList
+        fields = ('id', 'owner_id', 'list_name',)
+
+    def to_representation(self, custom_list):
+        response = super().to_representation(custom_list)
+        response['booklist'] = BookListSerializer(custom_list.booklist, many=True).data
+        return response
+
+
 class EditPasswordSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
@@ -46,60 +58,37 @@ class EditPasswordSerializer(serializers.ModelSerializer):
         return data
 
     def update(self, account, validated_data):
-        account.set_password(validated_data['password'])
-        account.save()
+        account.update_password(validated_data)
         return True
 
 
-class GetProfileSerializer(serializers.ModelSerializer):
-    mylist = BookListingField(many=True, read_only=True)
+class ProfileSerializer(DynamicFieldsModelSerializer):
+    booklist = UserBookListSerializer(many=True, read_only=True)
 
     class Meta:
         model = Account
-        fields = ('name', 'email', 'mylist',)
+        fields = ('name', 'email', 'booklist')
 
 
-class EditProfileSerializer(DynamicFieldsModelSerializer):
+class AddListSerializer(UserBookListSerializer):
     class Meta:
-        model = Account
-        fields = ('name', 'email',)
+        model = CustomList
+        fields = ('id', 'booklist',)
 
-    def update(self, instance, validated_data):
-        instance.email = validated_data.get('email', instance.email)
-        instance.name = validated_data.get('name', instance.name)
-        instance.save()
-        return instance
+    def update(self, custom_list, validated_data):
+        book_list = validated_data.pop('booklist', [])
+        for book in book_list:
+            custom_list.booklist.add(book)
+        return custom_list
 
 
-class AddMylistSerializer(serializers.ModelSerializer):
-    mylist = BookListingField(many=True, read_only=True)
-
+class SubListSerializer(UserBookListSerializer):
     class Meta:
-        model = Account
-        fields = ('mylist',)
+        model = CustomList
+        fields = ('id', 'booklist',)
 
-    def update(self, account, validated_data):
-        for book in validated_data['mylist']:
-            account.mylist.add(book)
-        return account
-
-
-class SubMylistSerializer(serializers.ModelSerializer):
-    mylist = BookListingField(many=True, read_only=True)
-
-    class Meta:
-        model = Account
-        fields = ('mylist',)
-
-    def update(self, account, validated_data):
-        for book in validated_data['mylist']:
-            account.mylist.remove(book)
-        return account
-
-
-class GetMylistSerializer(serializers.ModelSerializer):
-    mylist = BookListingField(many=True, read_only=True)
-
-    class Meta:
-        model = Account
-        fields = ('mylist',)
+    def update(self, custom_list, validated_data):
+        book_list = validated_data.pop('booklist', [])
+        for book in book_list:
+            custom_list.booklist.remove(book)
+        return custom_list

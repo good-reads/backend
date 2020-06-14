@@ -1,11 +1,23 @@
 from django.contrib import admin
 
-from .models import Account
+from .models import (
+    Account, Review, CustomList,
+)
 
 
 class AccountAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'email', 'password', 'date_joined',)
-    filter_horizontal = ('mylist',)
+
+
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'book', 'content',)
+
+
+class CustomListAdmin(admin.ModelAdmin):
+    list_display = ('id', 'list_name', 'owner_id',)
+    filter_horizontal = ('booklist',)
 
 
 admin.site.register(Account, AccountAdmin)
+admin.site.register(Review, ReviewAdmin)
+admin.site.register(CustomList, CustomListAdmin)

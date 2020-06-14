@@ -5,9 +5,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models.books import Book
+from book.models import Book
 from user.models import Account
-from user.serializers import GetMylistSerializer
 from .serializers import (
     RegisterBookSerializer,
     BookDetailSerializer,
@@ -48,33 +47,33 @@ def get_book_details(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_book_lists(request):
-    if request.method == 'GET':
-        data = {}
-
-        if request.GET.get('mylist', False):
-            user = get_object_or_404(Account, id=request.user.id)
-            data = GetMylistSerializer(user).data
-            data['mylist'] = BookListSerializer(
-                data['mylist'],
-                many=True,
-            ).data[:settings.BOOK_LIST_LIMITAION]
-
-        if request.GET.get('popular', False):
-            data['popular'] = BookListSerializer(
-                Book.get_popular_list(),
-                many=True,
-            ).data[:settings.BOOK_LIST_LIMITAION]
-
-        if request.GET.get('bestseller', False):
-            print(type(Book.get_bestseller_list()))
-            data['bestseller'] = BookListSerializer(
-                Book.get_bestseller_list(),
-                many=True,
-            ).data[:settings.BOOK_LIST_LIMITAION]
-
-        return Response(data, status=status.HTTP_200_OK)
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def get_book_lists(request):
+#     if request.method == 'GET':
+#         data = {}
+#
+#         if request.GET.get('mylist', False):
+#             user = get_object_or_404(Account, id=request.user.id)
+#             data = GetMylistSerializer(user).data
+#             data['mylist'] = BookListSerializer(
+#                 data['mylist'],
+#                 many=True,
+#             ).data[:settings.BOOK_LIST_LIMITAION]
+#
+#         if request.GET.get('popular', False):
+#             data['popular'] = BookListSerializer(
+#                 Book.get_popular_list(),
+#                 many=True,
+#             ).data[:settings.BOOK_LIST_LIMITAION]
+#
+#         if request.GET.get('bestseller', False):
+#             print(type(Book.get_bestseller_list()))
+#             data['bestseller'] = BookListSerializer(
+#                 Book.get_bestseller_list(),
+#                 many=True,
+#             ).data[:settings.BOOK_LIST_LIMITAION]
+#
+#         return Response(data, status=status.HTTP_200_OK)
 
 

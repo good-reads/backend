@@ -3,8 +3,6 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser, PermissionsMixin
 )
 
-from book.models.books import Book
-
 
 class UserManager(BaseUserManager):
 
@@ -36,7 +34,6 @@ class Account(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key=True)
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=20, null=False, unique=True)
-    mylist = models.ManyToManyField(Book)
 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
@@ -51,4 +48,12 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         db_table = 'accounts'
+        app_label = 'user'
         ordering = ('id',)
+
+    def update(self, params):
+        self.update(**params)
+
+    def update_password(self, params):
+        self.set_password(params['password'])
+        self.save()

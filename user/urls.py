@@ -8,5 +8,10 @@ urlpatterns = [
     path("auth/account/get/", get_or_update_account),
     path("auth/account/update/", get_or_update_account),
 
-    path("auth/mylist/edit/", edit_my_list),
+    path("list/get/", get_or_create_list),
+    path("list/create/", get_or_create_list),
+    path("list/edit/", edit_list),
+    path("list/delete/", delete_list),
+
+    # path("review/write/", create_review),
 ]

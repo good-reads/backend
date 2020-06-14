@@ -3,6 +3,8 @@ from rest_framework import serializers
 
 class BookListingField(serializers.RelatedField):
     def to_representation(self, book):
+        print("!!!!!")
+        print(book)
         return {
             'id': book.id,
             'title': book.title,
