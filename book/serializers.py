@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
 from config.serializers import DynamicFieldsModelSerializer
-from book.models import Book
+from .models import Book
+from .models import Review
 
 
 class RegisterBookSerializer(DynamicFieldsModelSerializer):
@@ -23,7 +24,16 @@ class RegisterBookSerializer(DynamicFieldsModelSerializer):
         return book
 
 
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
+        read_only = ('id',)
+
+
 class BookDetailSerializer(serializers.ModelSerializer):
+    reviews = ReviewSerializer(many=True, read_only=True)
+
     class Meta:
         model = Book
         fields = '__all__'
