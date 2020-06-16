@@ -1,8 +1,9 @@
 from rest_framework import serializers
 
 from config.serializers import DynamicFieldsModelSerializer
-from .models import Book
-from .models import Review
+from .models import (
+    Book, Review, Rate
+)
 
 
 class RegisterBookSerializer(DynamicFieldsModelSerializer):
@@ -37,6 +38,19 @@ class BookDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = '__all__'
+
+
+class RateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rate
+        fields = '__all__'
+
+    def create(self, validated_data):
+        return Rate.create(validated_data)
+
+    def update(self, rate, validated_data):
+        return rate.update_score(validated_data)
+
 
 
 class BookListSerializer(serializers.ModelSerializer):

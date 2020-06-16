@@ -5,13 +5,16 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Book, Review
+from .models import (
+    Book, Review, Rate
+)
 from user.models import Account
 from .serializers import (
     RegisterBookSerializer,
     BookDetailSerializer,
     BookListSerializer,
     ReviewSerializer,
+    RateSerializer,
 )
 
 
@@ -78,6 +81,30 @@ def edit_or_delete_review(request):
     if request.method == 'DELETE':
         review = get_object_or_404(Review, id=request.data['review_id'])
         review.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['PUT', 'PATCH', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def edit_or_cancel_rate(request):
+    if request.method == 'PUT':
+        request.data['user'] = request.user.id
+        serializer = RateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    if request.method == 'PATCH':
+        request.data['user'] = request.user.id
+        rate = get_object_or_404(Rate, user=request.user, book=request.data['book'])
+        serializer = RateSerializer(rate, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    if request.method == 'DELETE':
+        rate = get_object_or_404(Rate, user=request.user, book=request.data['book'])
+        rate.cancel()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 

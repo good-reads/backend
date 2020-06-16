@@ -28,3 +28,6 @@ class Book(models.Model):
     def get_bestseller_list(cls):
         params = {}
         return cls.objects.filter(**params)
+
+    def update_rate(self, score):
+        self.rate = score

@@ -1,16 +1,12 @@
 from django.contrib import admin
 
 from .models import (
-    Account, Review, CustomList,
+    Account, CustomList,
 )
 
 
 class AccountAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'email', 'password', 'date_joined',)
-
-
-class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'book', 'content',)
 
 
 class CustomListAdmin(admin.ModelAdmin):
@@ -19,5 +15,4 @@ class CustomListAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Account, AccountAdmin)
-admin.site.register(Review, ReviewAdmin)
 admin.site.register(CustomList, CustomListAdmin)
