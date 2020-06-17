@@ -104,8 +104,8 @@ def edit_or_cancel_rate(request):
 
     if request.method == 'DELETE':
         rate = get_object_or_404(Rate, user=request.user, book=request.data['book'])
-        rate.cancel()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        data = rate.cancel()
+        return Response(data=data, status=status.HTTP_200_OK)
 
 
 # @api_view(['GET'])

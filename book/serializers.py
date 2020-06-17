@@ -41,6 +41,8 @@ class BookDetailSerializer(serializers.ModelSerializer):
 
 
 class RateSerializer(serializers.ModelSerializer):
+    rate_avg = serializers.FloatField(read_only=True)
+
     class Meta:
         model = Rate
         fields = '__all__'

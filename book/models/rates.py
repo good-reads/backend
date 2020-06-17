@@ -21,6 +21,7 @@ class Rate(models.Model):
         rate = cls.objects.create(**params)
         rate.book.rate = cls.calculate_rate(rate.book)
         rate.book.save()
+        rate.rate_avg = rate.book.rate
         return rate
 
     @classmethod
@@ -32,10 +33,14 @@ class Rate(models.Model):
         self.save(update_fields=['score'])
         self.book.rate = self.calculate_rate(self.book)
         self.book.save(update_fields=['rate'])
+        self.rate_avg = self.book.rate
         return self
 
     def cancel(self):
         self.delete()
         self.book.rate = self.calculate_rate(self.book)
         self.book.save(update_fields=['rate'])
+        return {
+            'rate_avg': self.book.rate
+        }
 
