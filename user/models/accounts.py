@@ -34,6 +34,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key=True)
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=20, null=False, unique=True)
+    thumbnail = models.ImageField(upload_to='user/thumbs/', default='sample.jpg')
 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)

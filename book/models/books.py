@@ -9,8 +9,8 @@ class Book(models.Model):
     intro = models.CharField(max_length=512)
     rate = models.FloatField(default=0)
 
-    thumbnail = models.URLField(default=settings.IMG_BASE_URL)
-    img = models.URLField(default=settings.IMG_BASE_URL)
+    thumbnail = models.ImageField(upload_to='book/thumbs/')
+    img = models.ImageField(upload_to='book/covers/')
 
     class Meta:
         db_table = 'books'

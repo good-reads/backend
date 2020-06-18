@@ -8,10 +8,13 @@ from book.serializers import BookListSerializer
 from config.serializers import DynamicFieldsModelSerializer
 
 
-class RegisterAccountSerializer(serializers.ModelSerializer):
+class RegisterAccountSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Account
-        fields = ('name', 'email', 'password',)
+        fields = '__all__'
+        read_only = (
+            'is_active', 'is_admin', 'is_superuser', 'is_staff', 'date_joined',
+        )
 
     def validate(self, data):
         validate_email(data['email'])
@@ -67,7 +70,11 @@ class ProfileSerializer(DynamicFieldsModelSerializer):
 
     class Meta:
         model = Account
-        fields = ('name', 'email', 'booklist')
+        fields = '__all__'
+        read_only = (
+            'is_active', 'is_admin', 'is_superuser', 'is_staff', 'date_joined', 'password',
+        )
+
 
 
 class AddListSerializer(UserBookListSerializer):

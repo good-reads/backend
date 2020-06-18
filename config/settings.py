@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'storages',
     'knox',
     'user',
     'book',
@@ -144,3 +145,17 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 IMG_BASE_URL = '/static/admin/img/icon-unknown.svg'
 BOOK_LIST_LIMITAION = 10
+
+# AWS settings
+AWS_ACCESS_KEY_ID = 'AKIAV4BY3VGSTWENLH53' # .csv 파일에 있는 내용을 입력 Access key ID
+AWS_SECRET_ACCESS_KEY = '51AWCOkxTcy+xMlJgTTf1oNXzSJve4adSRmULT2c' # .csv 파일에 있는 내용을 입력 Secret access key
+AWS_REGION = 'ap-northeast-2'
+
+# S3 Storages settings
+AWS_STORAGE_BUCKET_NAME = 'goodreads-clone-storage' # 설정한 버킷 이름
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME,AWS_REGION)
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'storage/')
