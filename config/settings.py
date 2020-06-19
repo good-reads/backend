@@ -29,6 +29,7 @@ ALLOWED_HOSTS = [
     ".ap-northeast-2.compute.amazonaws.com",
     "localhost",
     "127.0.0.1",
+    "54.180.154.184",
 ]
 
 
@@ -147,8 +148,8 @@ IMG_BASE_URL = '/static/admin/img/icon-unknown.svg'
 BOOK_LIST_LIMITAION = 10
 
 # AWS settings
-AWS_ACCESS_KEY_ID = 'AKIAV4BY3VGSTWENLH53' # .csv 파일에 있는 내용을 입력 Access key ID
-AWS_SECRET_ACCESS_KEY = '51AWCOkxTcy+xMlJgTTf1oNXzSJve4adSRmULT2c' # .csv 파일에 있는 내용을 입력 Secret access key
+AWS_ACCESS_KEY_ID = 'access key' # .csv 파일에 있는 내용을 입력 Access key ID
+AWS_SECRET_ACCESS_KEY = 'secret key' # .csv 파일에 있는 내용을 입력 Secret access key
 AWS_REGION = 'ap-northeast-2'
 
 # S3 Storages settings
