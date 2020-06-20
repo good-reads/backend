@@ -11,16 +11,20 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import json
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONFIG_SECRET_DIR = os.path.join(BASE_DIR, '.config_secret')
+CONFIG_SETTINGS_COMMON_FILE = os.path.join(CONFIG_SECRET_DIR, 'config_common.json')
+config_secret = json.loads(open(CONFIG_SETTINGS_COMMON_FILE).read())
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '2oqn(ypmww_n1#k6+(y76x+3cq!u=zitp-y%#vc%g%ee*-@&%h'
+SECRET_KEY = config_secret['django']['secret_key']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -148,12 +152,12 @@ IMG_BASE_URL = '/static/admin/img/icon-unknown.svg'
 BOOK_LIST_LIMITAION = 10
 
 # AWS settings
-AWS_ACCESS_KEY_ID = 'access key' # .csv 파일에 있는 내용을 입력 Access key ID
-AWS_SECRET_ACCESS_KEY = 'secret key' # .csv 파일에 있는 내용을 입력 Secret access key
-AWS_REGION = 'ap-northeast-2'
+AWS_ACCESS_KEY_ID = config_secret['aws']['access_key_id'] # .csv 파일에 있는 내용을 입력 Access key ID
+AWS_SECRET_ACCESS_KEY = config_secret['aws']['secret_key'] # .csv 파일에 있는 내용을 입력 Secret access key
+AWS_REGION = config_secret['aws']['region']
 
 # S3 Storages settings
-AWS_STORAGE_BUCKET_NAME = 'goodreads-clone-storage' # 설정한 버킷 이름
+AWS_STORAGE_BUCKET_NAME = config_secret['aws']['storage_name'] # 설정한 버킷 이름
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME,AWS_REGION)
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
