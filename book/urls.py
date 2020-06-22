@@ -16,6 +16,6 @@ urlpatterns = [
     path("delete/review/", edit_or_delete_review),
 
     path("create/rate/", edit_or_cancel_rate),
-    path("update/rate/", edit_or_cancel_rate),
+    # path("update/rate/", edit_or_cancel_rate),
     path("cancel/rate/", edit_or_cancel_rate),
 ]

@@ -17,16 +17,16 @@ class Rate(models.Model):
         db_table = 'rates'
 
     @classmethod
+    def calculate_rate(cls, book):
+        return cls.objects.filter(book=book).aggregate(models.Avg('score'))['score__avg']
+
+    @classmethod
     def create(cls, params):
         rate = cls.objects.create(**params)
         rate.book.rate = cls.calculate_rate(rate.book)
         rate.book.save()
         rate.rate_avg = rate.book.rate
         return rate
-
-    @classmethod
-    def calculate_rate(cls, book):
-        return cls.objects.filter(book=book).aggregate(models.Avg('score'))['score__avg']
 
     def update_score(self, params):
         self.score = params['score']
@@ -43,4 +43,3 @@ class Rate(models.Model):
         return {
             'rate_avg': self.book.rate
         }
-
