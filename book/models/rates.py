@@ -18,7 +18,9 @@ class Rate(models.Model):
 
     @classmethod
     def calculate_rate(cls, book):
-        return cls.objects.filter(book=book).aggregate(models.Avg('score'))['score__avg']
+        return cls.objects.filter(book=book).aggregate(
+            models.Avg('score')
+        )['score__avg'] or 0
 
     @classmethod
     def create(cls, params):
