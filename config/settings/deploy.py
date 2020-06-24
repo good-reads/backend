@@ -8,12 +8,12 @@ ALLOWED_HOSTS = [
     "54.180.154.184",
 ]
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
 
 # # AWS settings
 # AWS_ACCESS_KEY_ID = config_secret['aws']['access_key_id'] # .csv 파일에 있는 내용을 입력 Access key ID
