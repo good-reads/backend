@@ -1,7 +1,7 @@
 from .base import *
 
 
-# debug = False
+debug = False
 
 # ALLOWED_HOSTS = [
 #     ".ap-northeast-2.compute.amazonaws.com",
