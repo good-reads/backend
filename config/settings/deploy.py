@@ -3,10 +3,10 @@ from .base import *
 
 debug = False
 
-ALLOWED_HOSTS = [
-    ".ap-northeast-2.compute.amazonaws.com",
-    "54.180.154.184",
-]
+# ALLOWED_HOSTS = [
+#     ".ap-northeast-2.compute.amazonaws.com",
+#     "54.180.154.184",
+# ]
 
 # DATABASES = {
 #     'default': {
