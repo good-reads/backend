@@ -27,14 +27,14 @@ config_secret = json.loads(open(CONFIG_SETTINGS_COMMON_FILE).read())
 SECRET_KEY = config_secret['django']['secret_key']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
 
-ALLOWED_HOSTS = [
-    ".ap-northeast-2.compute.amazonaws.com",
-    "localhost",
-    "127.0.0.1",
-    "54.180.154.184",
-]
+# ALLOWED_HOSTS = [
+#     ".ap-northeast-2.compute.amazonaws.com",
+#     "localhost",
+#     "127.0.0.1",
+#     "54.180.154.184",
+# ]
 
 
 # Application definition

@@ -3,6 +3,11 @@ from .base import *
 
 debug = False
 
+ALLOWED_HOSTS = [
+    ".ap-northeast-2.compute.amazonaws.com",
+    "54.180.154.184",
+]
+
 # AWS settings
 AWS_ACCESS_KEY_ID = config_secret['aws']['access_key_id'] # .csv 파일에 있는 내용을 입력 Access key ID
 AWS_SECRET_ACCESS_KEY = config_secret['aws']['secret_key'] # .csv 파일에 있는 내용을 입력 Secret access key
