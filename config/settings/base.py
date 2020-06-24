@@ -14,7 +14,7 @@ import os
 import json
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CONFIG_SECRET_DIR = os.path.join(BASE_DIR, '.config_secret')
 CONFIG_SETTINGS_COMMON_FILE = os.path.join(CONFIG_SECRET_DIR, 'config_common.json')
 config_secret = json.loads(open(CONFIG_SETTINGS_COMMON_FILE).read())
@@ -151,6 +151,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 IMG_BASE_URL = '/static/admin/img/icon-unknown.svg'
 BOOK_LIST_LIMITAION = 10
 
+MEDIA_URL = '/storage/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'storage/')
+
 # AWS settings
 AWS_ACCESS_KEY_ID = config_secret['aws']['access_key_id'] # .csv 파일에 있는 내용을 입력 Access key ID
 AWS_SECRET_ACCESS_KEY = config_secret['aws']['secret_key'] # .csv 파일에 있는 내용을 입력 Secret access key
@@ -163,4 +166,4 @@ AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'storage/')
+
