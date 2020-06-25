@@ -8,6 +8,8 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
 ]
 
+WSGI_APPLICATION = 'config.wsgi.debug.application'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
