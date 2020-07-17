@@ -6,7 +6,7 @@ from .models import (
 
 
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'author',)
+    list_display = ('isbn', 'title', 'author', 'pubdate',)
 
 
 class ReviewAdmin(admin.ModelAdmin):
@@ -14,7 +14,7 @@ class ReviewAdmin(admin.ModelAdmin):
 
 
 class RateAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'book', 'score',)
+    list_display = ('id', 'user', 'book_isbn', 'score',)
 
 
 admin.site.register(Book, BookAdmin)

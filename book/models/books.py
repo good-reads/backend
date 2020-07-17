@@ -1,16 +1,23 @@
 from django.db import models
-from django.conf import settings
+
+from .rates import Rate
 
 
 class Book(models.Model):
-    id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=50)
-    author = models.CharField(max_length=30)
-    intro = models.CharField(max_length=512)
-    rate = models.FloatField(default=0)
+    isbn = models.CharField(primary_key=True, max_length=30, unique=True)
+    title = models.CharField(max_length=50, default="")
+    author = models.CharField(max_length=30, default="")
+    description = models.CharField(max_length=512, default="")
+    publisher = models.CharField(max_length=30, default="")
+    pubdate = models.DateField()
+    cover = models.ImageField(
+        upload_to=lambda instance, filename: 'book/covers/{0}/{1}'.format(instance.isbn, filename))
 
-    thumbnail = models.ImageField(upload_to='book/thumbs/')
-    img = models.ImageField(upload_to='book/covers/')
+    @property
+    def rate(self):
+        return Rate.objects.filter(book_isbn=self.isbn).aggregate(
+            models.Avg('score')
+        )['score__avg'] or 0
 
     class Meta:
         db_table = 'books'
@@ -29,5 +36,5 @@ class Book(models.Model):
         params = {}
         return cls.objects.filter(**params)
 
-    def update_rate(self, score):
-        self.rate = score
+    # def update_rate(self, score):
+    #     self.rate = score

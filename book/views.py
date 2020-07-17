@@ -30,14 +30,14 @@ def register_or_update_book(request, **kwargs):
         return Response(status=status.HTTP_201_CREATED)
 
     if request.method == 'PATCH':
-        book = get_object_or_404(Book, id=kwargs['book_id'])
+        book = get_object_or_404(Book, isbn=kwargs['isbn'])
         serializer = RegisterBookSerializer(book, fields=fields, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
     if request.method == 'DELETE':
-        book = get_object_or_404(Book, id=kwargs['book_id'])
+        book = get_object_or_404(Book, isbn=kwargs['isbn'])
         book.delete()
         return Response(status=status.HTTP_200_OK)
 
@@ -46,7 +46,7 @@ def register_or_update_book(request, **kwargs):
 @permission_classes([IsAuthenticated])
 def get_book_details(request):
     if request.method == 'GET':
-        book = get_object_or_404(Book, id=request.GET.get('book_id'))
+        book = get_object_or_404(Book, isbn=request.GET.get('isbn'))
         serializer = BookDetailSerializer(book)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -97,7 +97,7 @@ def edit_or_cancel_rate(request):
     if request.method == 'PUT':
         request.data['user'] = request.user.id
         try:
-            rate = get_object_or_404(Rate, user=request.user, book=request.data['book'])
+            rate = get_object_or_404(Rate, user=request.user, book_isbn=request.data['book_isbn'])
             serializer = RateSerializer(rate, data=request.data)
         except Http404:
             serializer = RateSerializer(data=request.data)
@@ -106,9 +106,9 @@ def edit_or_cancel_rate(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     if request.method == 'DELETE':
-        rate = get_object_or_404(Rate, user=request.user, book=request.data['book'])
-        data = rate.cancel()
-        return Response(data=data, status=status.HTTP_200_OK)
+        rate = get_object_or_404(Rate, user=request.user, book_isbn=request.data['book_isbn'])
+        rate.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # @api_view(['GET'])
