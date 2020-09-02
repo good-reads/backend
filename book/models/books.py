@@ -1,4 +1,7 @@
+import datetime
+
 from django.db import models
+from django.shortcuts import get_list_or_404
 
 from .rates import Rate
 
@@ -35,6 +38,22 @@ class Book(models.Model):
     def get_bestseller_list(cls):
         params = {}
         return cls.objects.filter(**params)
+
+    @classmethod
+    def search_books(cls, *args):
+        condi = args[0]
+        isbn = condi.get('isbn', None)
+        if isbn:
+            return cls.objects.filter(isbn=isbn)
+        else:
+            query_set = {
+                'title__contains': condi.get('title', ''),
+                'author__contains': condi.get('author', ''),
+                'publisher__contains': condi.get('publisher', ''),
+                'pubdate__range': (condi.get('start', datetime.datetime.min),
+                                   condi.get('end', datetime.datetime.now()))
+            }
+            return cls.objects.filter(**query_set)
 
     # def update_rate(self, score):
     #     self.rate = score

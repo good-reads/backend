@@ -55,7 +55,7 @@ def get_book_details(request):
 @permission_classes([IsAuthenticated])
 def search_books(request):
     if request.method == 'GET':
-        book_list = get_list_or_404(Book, title=request.GET.get('title', None))
+        book_list = Book.search_books(request.GET.dict())
         serializer = BookListSerializer(book_list, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

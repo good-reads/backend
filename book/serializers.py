@@ -48,4 +48,4 @@ class RateSerializer(serializers.ModelSerializer):
 class BookListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ('id', 'title', 'author', 'rate', 'cover',)
+        fields = ('isbn', 'title', 'author', 'rate', 'cover',)
