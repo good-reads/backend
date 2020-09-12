@@ -6,6 +6,9 @@ from django.shortcuts import get_list_or_404
 from .rates import Rate
 
 
+def upload_url(instance, filename):
+    return 'book/covers/{0}/{1}'.format(instance.isbn, filename)
+
 class Book(models.Model):
     isbn = models.CharField(primary_key=True, max_length=30, unique=True)
     title = models.CharField(max_length=50, default="")
@@ -13,8 +16,7 @@ class Book(models.Model):
     description = models.CharField(max_length=512, default="")
     publisher = models.CharField(max_length=30, default="")
     pubdate = models.DateField()
-    cover = models.ImageField(
-        upload_to=lambda instance, filename: 'book/covers/{0}/{1}'.format(instance.isbn, filename))
+    cover = models.ImageField(upload_to=upload_url)
 
     @property
     def rate(self):

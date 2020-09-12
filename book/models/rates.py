@@ -9,7 +9,7 @@ from user.models import Account
 
 class Rate(models.Model):
     id = models.AutoField(primary_key=True)
-    user = models.OneToOneField(Account, on_delete=models.CASCADE)
+    user = models.ForeignKey(Account, to_field='id', on_delete=models.CASCADE)
     book_isbn = models.ForeignKey('Book', to_field='isbn', on_delete=models.CASCADE)
     score = models.FloatField(default=5., validators=[MinValueValidator(0.), MaxValueValidator(5.)])
 
@@ -18,7 +18,7 @@ class Rate(models.Model):
 
     @classmethod
     def calculate_rate(cls, book):
-        return cls.objects.filter(book=book).aggregate(
+        return cls.objects.filter(book=book).saggregate(
             models.Avg('score')
         )['score__avg'] or 0
 
